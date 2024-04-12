@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserRegisterComponent } from './user-register/user-register.component';
+import { RegisterService } from './Service/register.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'NIMAPINFOTECHASSIGNMENT';
+  
 }

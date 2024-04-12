@@ -1,0 +1,25 @@
+<h1 style="text-align: center;
+color: skyblue;
+margin-top: 30px;
+font-weight: bold;
+margin-bottom: 40px;"
+>PROFILE PAGE </h1>
+<div *ngIf=" result" class="main" >
+    <div>
+        <img src={{result.image}} alt="">
+        <div class="main-button">
+            <button mat-raised-button color="warn" (click)="editProfile(result)">Edit Photo</button>
+            <button mat-raised-button color="warn" (click)="editProfile(result)">Edit profile</button>
+        </div>
+    </div>
+    <div>
+        I'm {{result.firstname}} and Im above {{result.age }} years and <br>
+        you can send your emails to <br>
+       <span style="color: skyblue;"> {{result.email}}</span>. I live in the state of <br>
+        {{result.state }}. I like to play {{result.tags }}.And please send me {{result.subscribeNewsletter }}. <br>
+         Please reach out to me on my {{result.phonenumber }}.
+         <br>
+         <button mat-raised-button color="accent">I Agress</button>
+    </div>
+</div>
+
