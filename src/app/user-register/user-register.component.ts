@@ -6,6 +6,7 @@ import { RegisterService } from '../Service/register.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient } from '@angular/common/http';
 
 export interface Fruit {
   name: string;
@@ -32,8 +33,11 @@ export class UserRegisterComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA)public data:any,
     private _dialodRef:MatDialogRef<UserRegisterComponent>,
     private _router:Router,
-    private snackbar:MatSnackBar
+    private snackbar:MatSnackBar,
+    private _http:HttpClient,
   ){
+    // validation used for inputfield
+
     this.registerForm=_fb.group({
       image:['',[Validators.required]],
       dimensionsValid: [false],
@@ -53,9 +57,29 @@ export class UserRegisterComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+    // automatically fetch data in input field
       this.registerForm.patchValue(this.data);
+        this.fetchImage(this.data.image);
   }
 
+  // this is for image to fetch data in input frame with specific width and height we are gave
+  fetchImage(imageUrl: string): void {
+    this._http.get(imageUrl, { responseType: 'blob' }).subscribe(
+      (response: Blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.imgPreview = reader.result as string;
+        };
+        reader.readAsDataURL(response);
+      },
+      (error) => {
+        console.error('Error fetching image:', error);
+      }
+    );
+  }
+
+  // get All data from jsonserver file 
   getUserData(){
     this._service.getUserData().subscribe(res=>{
       console.log("data1", res);
@@ -66,8 +90,11 @@ export class UserRegisterComponent implements OnInit{
       console.error("error during get data from json file",error);
     });
   }
+  
+  // this is submit button in this button have two button one is update and second is register button
   onFormSubmit(){
     if(this.registerForm.valid){
+      // updated button
       if(this.data){
         this._service.updateUserData(this.data.id,this.registerForm.value).subscribe(response=>{
           console.log(response);
@@ -81,6 +108,7 @@ export class UserRegisterComponent implements OnInit{
           console.error("error during adding value in json file",error);
         });
       }else{
+        // register button
         this._service.addUserData(this.registerForm.value).subscribe(response=>{
           console.log(response);
           this.snackbar.open("Registration Successfull...!",'ok',{
@@ -146,10 +174,11 @@ export class UserRegisterComponent implements OnInit{
     'Australia': ["New South Wales", "Victoria", "Queensland", "Western Australia", "South Australia","Tasmania", "Australian Capital Territory", "Northern Territory"],
   };
 
+  // get country value
   get country() {
     return this.registerForm.get('country');
   }
-
+// get state value 
   get state() {
     return this.registerForm.get('state');
   }
@@ -170,6 +199,7 @@ export class UserRegisterComponent implements OnInit{
     this.validateImage(file);
   }
 
+  // validation for image 
   validateImage(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -189,11 +219,14 @@ export class UserRegisterComponent implements OnInit{
     };
   }
 
+  // image converted into base64String 
   convertToBase64(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
+
       this.registerForm.patchValue({image:reader.result});
+      this.imgPreview = reader.result as string;
       console.log('Base64 image:', reader.result);
     };
   }

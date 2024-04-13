@@ -4,7 +4,7 @@
     <div>
       <div>
         <div class="preview-container">
-          <img [src]="imgPreview || defaultImage" class="passport-photo" alt="Preview Image">
+          <img [src]="imgPreview || defaultImage" ngif="imgPreview" class="passport-photo" alt="Preview Image">
         </div>
         <input type="file" (change)="onFileSelected($event)" formControlName="image">
         <div *ngIf="imageError" style="color: red;">{{ imageError }}</div>
