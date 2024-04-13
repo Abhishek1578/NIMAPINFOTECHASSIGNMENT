@@ -60,7 +60,7 @@ export class UserRegisterComponent implements OnInit{
 
     // automatically fetch data in input field
       this.registerForm.patchValue(this.data);
-        this.fetchImage(this.data.image);
+        this.fetchImage(this.data.image);  
   }
 
   // this is for image to fetch data in input frame with specific width and height we are gave
